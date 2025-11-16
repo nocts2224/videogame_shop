@@ -13,7 +13,7 @@ const games = ref([
   { id: 9, title: "The Witcher 3", price: 29.99, image: "/images/witcher3.jpeg" },
   { id: 10, title: "Starfield", price: 15.99, image: "/images/starfield.jpg" },
   { id: 11, title: "Resident Evil", price: 39.99, image: "/images/resident.jpg" },
-  { id: 12, title: "Mirrors Edge", price: 29.99, image: "/images/mirrors.jpg" },
+  { id: 12, title: "Mirrors Edge", price: 29.99, image: "/images/edge.jpg" },
 ]);
 
 const cart = ref([]); // shared cart
