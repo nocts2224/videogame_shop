@@ -87,25 +87,86 @@
           </div>
           Cart
         </RouterLink>
+
+        <RouterLink to="/orders" class="nav-link cart-link" @click="mobileMenuOpen = false">
+          <div class="cart-icon-wrapper">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
+              />
+            </svg>
+
+            <transition name="badge">
+              <span v-if="totalGamesBought" class="cart-badge">
+                {{ totalGamesBought > 99 ? "99+" : totalGamesBought }}
+              </span>
+            </transition>
+          </div>
+          Orders
+        </RouterLink>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useShop } from "../composables/useShop";
 import { RouterLink } from "vue-router";
 
 const { cart } = useShop();
 const mobileMenuOpen = ref(false);
 
+// Cart count for the cart badge
 const cartCount = computed(() => cart.value.reduce((sum, item) => sum + item.qty, 0));
+
+// Orders and badge
+const orders = ref([]);
+
+// Load orders from localStorage
+function loadOrders() {
+  const savedOrders = localStorage.getItem("orders");
+  orders.value = savedOrders ? JSON.parse(savedOrders) : [];
+}
+
+// Initial load
+onMounted(() => {
+  loadOrders();
+
+  // Listen for changes in localStorage (other tabs)
+  window.addEventListener("storage", () => {
+    loadOrders();
+  });
+});
+
+// Computed total games bought for the orders badge
+const totalGamesBought = computed(() => {
+  return orders.value.reduce((sum, order) => {
+    return sum + order.cart.reduce((s, item) => s + item.qty, 0);
+  }, 0);
+});
+
+// Call this after placing a new order to update badge immediately
+function refreshOrdersBadge() {
+  loadOrders();
+}
+
 </script>
+
 
 <style scoped>
 .brand-logo {
-  width: 50px;       /* adjust size */
+  width: 50px; /* adjust size */
   height: 50px;
   object-fit: contain;
   transition: transform 0.3s ease;
