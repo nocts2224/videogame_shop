@@ -181,7 +181,7 @@ h2 {
 
 #bestGamesCarousel .carousel-control-prev:hover,
 #bestGamesCarousel .carousel-control-next:hover {
-  background: rgba(13, 110, 253, 0.8);
+  background: rgba(157, 13, 253, 0.8);
   transform: translateY(-50%) scale(1.1);
 }
 
